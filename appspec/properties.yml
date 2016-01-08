@@ -1,0 +1,6 @@
+---
+
+10.190.2.55:
+  :roles:
+    - appserver
+  :server_id: 101

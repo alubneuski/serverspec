@@ -1,0 +1,46 @@
+require 'serverspec'
+require 'rubygems'
+require 'bundler/setup'
+require 'serverspec'
+require 'pathname'
+require 'net/ssh'
+require 'yaml'
+
+#include Serverspec::Helper::Ssh
+#include Serverspec::Helper::DetectOS
+#include Serverspec::Helper::Properties
+
+properties = YAML.load_file('properties.yml')
+
+RSpec.configure do |c| 
+	c.host	= ENV['TARGET_HOST']
+	set_property properties[c.host]
+	options	= Net::SSH::Config.for(c.host)
+	KEYS	= ['-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAiTX1FGExRFiGjtbnnZtugVNqczIcvcYo+wIKGizC59oT1frI242qJOdtlxWL
+ZqvtRJ42ctgXUIWMOPuGsMkPM6syW1ZbdF4dJPaky2pOZQXAgxLnNLs4s4JCOGx1cR2dKroUuzTi
+wz9K7p+ODq94vBiVL0QI5wZSwLonCcHX9mZyz0jH+SyzFVa3e37wWcTkaEzZz3D1sAA1Sf9GB3eE
+oUvo4JZ7nxqjnjUxQ1HbWhVpXMtHN7UlwTqwxzS2FGtwkccY6nxn5PthtKnP16/od06uD/c0rkUg
+SqUZyV+dUI+QDwyKeDlL8vVa8s9bL4NzAsNR0laK31fW081WHDa3oQIDAQABAoIBAGcacoTT2899
+re7bscOOrmTjp5PUTiCULOsgxzKP/A14o3shLZk9RGLivEjRWaTXAD2VnViC5FIPaCTRbI6fJpsu
+w3I63BH/PmsuIvrvcOUcg2J6692F6b+J2/TGGyHanOUkWrupq9QHVWkl3/tNA65j0oZn20CuUbSc
+rQT58iwl/nX7A0D9X33Rom4gHDObSS0paCMpdN6kC/92WXZ+R8YsQFDm4+yUrXbsQNl1Dcj6ddvX
+6/8jtJrfUR5TW8p15cq6HNccLvD9cDmv3DolYPfB/9WuB5pG8ZeVGlUrWSp9LZI9BJPqf7P5rJZN
+mPl0W2Bwgm8Las6ZbNfxEqDgVVkCgYEA+QQedP+zOB1qSejzHOGnWt+x42AwCPnl9D1vONonhYs1
+QovusQ16o0bblZudXas4W1pE6HXMKDjSGcMEmJMtPzQan1SI+Y3tYxyTJGZdrfsE5CePP/VMjBkw
+GdpVLRirG2NYrrXKoxHmB+TMQJeucA62MKA5myFoBjnfma4o1YMCgYEAjQ8ZxBoWAwZj2BwKdQlk
+bchDBRdR2bdFyuG8jie1v5STW0qFz2/yWqEDQOcwNMqB3DUrM5r0dZeGoFLGVnhDAVcFMWT/XcLw
+q1Svjgpf0lhsuVjxCpCI+wEWa69CFzEHW4DNaNQfOvDrDropPjenqAzT0Wxt6vWW7NzvtV7pWQsC
+gYB/qOrsVEJO3FWnOnOYNN8VKWULCj7V+zc2dWBVpxFn1ywgx5hA0IY0upjMJBES+jpUKvz0p59Y
+Z3jemCn9BkbGBjI3yKDIP0iZ7QZKPOh9zxh81wMLaPgrQqZ0Oog8LE9cJRxLxQrzerORDGziGGDn
+NcOVPi8KJqArwPOu16g7fQKBgAfdXaxnX+7PPmXgOl0IJwdP8RypjjC7XTLQnzi10hZabFTctNU6
+AqM28v19ZlyrJc5nUH9SFmswBZuOwew0TFgYx/tXDD3oDo8e66LZxTnvIDC9WsMiB+Em0F80qFSu
+sSBS8CD2Ir+gixqJGp+Tbs+Z132HtCEzjDSspNjR7+S9AoGBAKkSPtqDyn4Cz7b/RJ9xbPJVrTmR
+oq5N56yqYkWTF5Jz5RqPXqh1a6mNw0ZXthI26+woV/7LioVPViwoGuCnHN7k/wx54Xx+8l1vneex
+xQ2vh5RkzUmeqjRfazqaiPUKpR6v2p8NAF2xIows/djeqDz1Li0EAVvRjs21gPd79/t1
+-----END RSA PRIVATE KEY-----']
+	user	= 'ec2-user'
+	c.ssh	= Net::SSH.start(c.host, user, :key_data => KEYS, :keys_only => TRUE)
+end
+
+set :backend, :exec
